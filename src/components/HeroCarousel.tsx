@@ -23,6 +23,7 @@ const CAROUSEL_CONFIG = {
   mobileRadius: 140,
   sensitivity: 0.42,
   snapDuration: 420,
+  autoRotationSpeed: 8,
 };
 
 function normalizeAngle(angle: number) {
@@ -38,28 +39,39 @@ function HeroCarousel({ cards, onNavigate }: HeroCarouselProps) {
   const targetRotationRef = useRef(initialRotation);
   const dragStartRef = useRef({ x: 0, rotation: initialRotation });
   const animationFrameRef = useRef(0);
+  const interactionRef = useRef(false);
   const didDragRef = useRef(false);
   const animateRef = useRef<() => void>(() => undefined);
 
   useEffect(() => {
-    const animate = () => {
+    let previousTime = performance.now();
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const animate = (time: number) => {
+      const elapsed = Math.min(time - previousTime, 50);
+      previousTime = time;
+      if (!interactionRef.current && !reducedMotion && cards.length > 1) {
+        targetRotationRef.current += (CAROUSEL_CONFIG.autoRotationSpeed * elapsed) / 1000;
+      }
       const difference = targetRotationRef.current - rotationRef.current;
       rotationRef.current += difference * 0.18;
       setRotation(rotationRef.current);
-      if (Math.abs(difference) > 0.02) {
-        animationFrameRef.current = requestAnimationFrame(animate);
-      } else {
-        animationFrameRef.current = 0;
-      }
+      animationFrameRef.current = requestAnimationFrame(animate);
     };
 
-    animateRef.current = animate;
+    animateRef.current = () => {
+      if (!animationFrameRef.current) {
+        previousTime = performance.now();
+        animationFrameRef.current = requestAnimationFrame(animate);
+      }
+    };
     animationFrameRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrameRef.current);
-  }, []);
+  }, [cards.length]);
 
   const beginDrag = (clientX: number) => {
     didDragRef.current = false;
+    interactionRef.current = true;
     dragStartRef.current = { x: clientX, rotation: targetRotationRef.current };
     setIsDragging(true);
   };
@@ -75,6 +87,7 @@ function HeroCarousel({ cards, onNavigate }: HeroCarouselProps) {
   const finishDrag = () => {
     if (!isDragging) return;
     setIsDragging(false);
+    interactionRef.current = false;
     const step = 360 / cards.length;
     targetRotationRef.current = Math.round(targetRotationRef.current / step) * step;
     if (!animationFrameRef.current) animationFrameRef.current = requestAnimationFrame(animateRef.current);

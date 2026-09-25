@@ -16,6 +16,7 @@ import {
   Menu,
   Microscope,
   MonitorSmartphone,
+  Phone,
   Radio,
   ShieldCheck,
   Sparkles,
@@ -28,6 +29,8 @@ import {
 const images = {
   team: '/assets/images/team/WhatsApp_Image_2026-09-24_at_16.15.55.jpeg',
   award: '/assets/images/awards/WhatsApp_Image_2026-09-24_at_16.12.22.jpeg',
+  awardMoment: '/assets/images/awards/fititel-award.jpeg',
+  awardTeam: '/assets/images/awards/fititel-team.jpeg',
   device: '/assets/images/prototype/WhatsApp_Image_2026-09-24_at_16.09.32.jpeg',
   detail: '/assets/images/prototype/WhatsApp_Image_2026-09-24_at_16.09.30.jpeg',
   sicklePortrait: 'https://images.pexels.com/photos/12895423/pexels-photo-12895423.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
@@ -217,6 +220,22 @@ function App() {
         </section>
 
         <section className="recognition-strip"><div className="section-pad recognition-inner"><div className="recognition-badge"><Sparkles size={15} /><span>RECONHECIMENTO</span></div><p>Vencedor nacional e seleccionado para representar Angola num concurso global de startups.</p><button onClick={() => scrollTo('marcos')}>Conhecer a nossa jornada <ArrowRight size={16} /></button></div></section>
+        <section className="recognition-showcase section-pad">
+          <div className="section-heading reveal"><div><span className="section-kicker">RECONHECIMENTO ITEL</span><h2>Um projecto reconhecido<br /><em>entre os melhores do país.</em></h2></div><p>O HemoLux Lite foi considerado um dos melhores projectos do Instituto de Telecomunicações — ITEL, uma referência nacional no ensino técnico médio de tecnologia.</p></div>
+          <div className="recognition-showcase-grid">
+            <figure className="recognition-photo reveal"><img src={images.awardMoment} alt="Equipa HemoLux a receber o reconhecimento no ITEL" /><figcaption><strong>Reconhecimento nacional</strong><small>Um momento de orgulho para a equipa HemoLux.</small></figcaption></figure>
+            <figure className="recognition-photo reveal delay-1"><img src={images.awardTeam} alt="Equipa HemoLux entre os projectos reconhecidos no ITEL" /><figcaption><strong>Entre os melhores projectos do ITEL</strong><small>Tecnologia angolana com impacto real.</small></figcaption></figure>
+          </div>
+        </section>
+        <section className="video-section section-pad">
+          <div className="section-heading reveal"><div><span className="section-kicker">O PROJECTO EM ACÇÃO</span><h2>Veja como funciona<br /><em>o HemoLux Lite.</em></h2></div><p>Uma explicação visual do projecto, do protótipo e da forma como a tecnologia aproxima a monitorização de quem precisa.</p></div>
+          <div className="project-video-wrap reveal">
+            <video className="project-video" controls preload="metadata" playsInline aria-label="Vídeo explicativo do projecto HemoLux Lite">
+              <source src="/assets/videos/hemolux-explicacao-audio.mp4" type="video/mp4" />
+              O seu navegador não suporta a reprodução deste vídeo.
+            </video>
+          </div>
+        </section>
 
         <section className="section-pad problem-section" id="problema">
           <div className="section-heading reveal"><div><span className="section-kicker">01 / O CONTEXTO</span><h2>Quando o acesso<br /><em>não pode esperar.</em></h2></div><p>A monitorização de parâmetros sanguíneos ainda depende, muitas vezes, de uma cadeia que não chega a todo o lado. O HemoLux nasce para encurtar essa distância.</p></div>
@@ -269,9 +288,9 @@ function App() {
         <section className="closing-section section-pad"><div className="closing-panel reveal"><div className="closing-orb" /><span className="section-kicker light">O PRÓXIMO SINAL É TEU</span><h2>Já construímos.<br /><em>Agora vamos escalar.</em></h2><p>Procuramos parceiros estratégicos — instituições, distribuidores e equipas clínicas — que queiram levar o HemoLux Lite para onde o acesso ainda não chegou. Temos tecnologia, temos protótipo, temos tração. Falamos?</p><button className="button button-light" onClick={() => setShowContact(true)}>Falar com a equipa <ArrowRight size={17} /></button><div className="closing-detail"><span>HemoLux Lite</span><span>Luanda, Angola</span><span>FITITEL 2026</span></div></div></section>
       </main>
 
-      <footer className="site-footer section-pad"><div className="footer-top"><div className="brand footer-brand"><span className="brand-mark"><Droplets size={22} strokeWidth={2.5} /></span><span><strong>Hemo<span>Lux</span></strong><small>LITE</small></span></div><p>Monitorização inteligente.<br />Cuidado que ilumina vidas.</p><button className="footer-mail" onClick={() => setShowContact(true)}><Mail size={16} /> hello@hemolux.ao <ArrowUpRightIcon /></button></div><div className="footer-bottom"><span>© 2026 HemoLux Lite</span><span>Desenvolvido no âmbito da FITITEL — ITEL</span><button onClick={() => scrollTo('top')}>Voltar ao topo <ArrowDownRight size={15} className="rotate-up" /></button></div></footer>
+      <footer className="site-footer section-pad"><div className="footer-top"><div className="brand footer-brand"><span className="brand-mark"><Droplets size={22} strokeWidth={2.5} /></span><span><strong>Hemo<span>Lux</span></strong><small>LITE</small></span></div><p>Monitorização inteligente.<br />Cuidado que ilumina vidas.</p><button className="footer-mail" onClick={() => setShowContact(true)}><Mail size={16} /> hemolux.ao@gmail.com <ArrowUpRightIcon /></button></div><div className="footer-bottom"><span>© 2026 HemoLux Lite</span><span>Desenvolvido no âmbito da FITITEL — ITEL</span><button onClick={() => scrollTo('top')}>Voltar ao topo <ArrowDownRight size={15} className="rotate-up" /></button></div></footer>
 
-      {showContact && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Contactar a equipa"><div className="contact-modal"><button className="modal-close" onClick={() => setShowContact(false)} aria-label="Fechar"><X size={19} /></button><span className="section-kicker">CONTACTO</span><h2>Vamos conversar<br /><em>parceria estratégica.</em></h2><p>Interessado em levar o HemoLux Lite para a sua realidade? Escreve-nos e a equipa responde com a próxima conversa.</p><a className="button button-primary modal-button" href="mailto:hello@hemolux.ao">Enviar email <ArrowRight size={17} /></a><small>hello@hemolux.ao</small></div></div>}
+      {showContact && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Contactar a equipa"><div className="contact-modal"><button className="modal-close" onClick={() => setShowContact(false)} aria-label="Fechar"><X size={19} /></button><span className="section-kicker">CONTACTO</span><h2>Vamos conversar<br /><em>parceria estratégica.</em></h2><p>Interessado em levar o HemoLux Lite para a sua realidade? Escreve-nos e a equipa responde com a próxima conversa.</p><a className="button button-primary modal-button" href="mailto:hemolux.ao@gmail.com">Enviar email <ArrowRight size={17} /></a><div className="contact-details"><small><Mail size={13} /> hemolux.ao@gmail.com</small><a href="tel:+244939195101"><Phone size={13} /> +244 939 195 101</a><a href="tel:+244951627395"><Phone size={13} /> +244 951 627 395</a></div></div></div>}
     </div>
   );
 }
