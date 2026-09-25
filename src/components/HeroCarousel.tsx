@@ -15,6 +15,7 @@ export type HeroCarouselCard = {
 type HeroCarouselProps = {
   cards: HeroCarouselCard[];
   onNavigate: (id: string) => void;
+  translate?: (text: string) => string;
 };
 
 const CAROUSEL_CONFIG = {
@@ -30,7 +31,7 @@ function normalizeAngle(angle: number) {
   return ((angle + 180) % 360 + 360) % 360 - 180;
 }
 
-function HeroCarousel({ cards, onNavigate }: HeroCarouselProps) {
+function HeroCarousel({ cards, onNavigate, translate = (text) => text }: HeroCarouselProps) {
   const initialRotation = 0;
   const [rotation, setRotation] = useState(initialRotation);
   const [isDragging, setIsDragging] = useState(false);
@@ -144,10 +145,10 @@ function HeroCarousel({ cards, onNavigate }: HeroCarouselProps) {
                   {card.image ? <img src={card.image} alt="" /> : <Icon size={27} strokeWidth={1.7} />}
                 </div>
                 <div className="hero-carousel-card-content">
-                  <span className="hero-carousel-kicker">{isFront ? 'SINAL DETECTADO' : 'HEMOLUX LITE'}</span>
+                  <span className="hero-carousel-kicker">{isFront ? translate('SINAL DETECTADO') : 'HEMOLUX LITE'}</span>
                   <h3>{card.title}</h3>
                   <p>{card.description}</p>
-                  <span className="hero-carousel-link">Explorar <ArrowRight size={14} /></span>
+                  <span className="hero-carousel-link">{translate('Explorar')} <ArrowRight size={14} /></span>
                 </div>
               </article>
             );
@@ -156,7 +157,7 @@ function HeroCarousel({ cards, onNavigate }: HeroCarouselProps) {
       </div>
       <div className="hero-carousel-hint" aria-hidden="true">
         <span className="hero-carousel-hand">↔</span>
-        Arraste para explorar
+        {translate('Arraste para explorar')}
       </div>
     </div>
   );

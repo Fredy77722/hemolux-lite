@@ -2,15 +2,15 @@ import { useEffect, useRef } from 'react';
 
 // These values are intentionally kept together so the visual can be tuned easily.
 const PARTICLE_CONFIG = {
-  desktopCount: 46,
-  mobileCount: 24,
+  desktopCount: 100,
+  mobileCount: 50,
   color: '#d6222a',
-  particleOpacity: 0.42,
-  driftSpeed: 0.0007,
-  interactionRadius: 185,
-  interactionStrength: 34,
-  linkDistance: 125,
-  linkOpacity: 0.13,
+  particleOpacity: 0.62,
+  driftSpeed: 0.0009,
+  interactionRadius: 220,
+  interactionStrength: 52,
+  linkDistance: 145,
+  linkOpacity: 0.2,
 };
 
 type Particle = {
@@ -65,7 +65,7 @@ function HemoglobinField() {
           y,
           homeX: x,
           homeY: y,
-          size: isMobile ? 4.5 + (index % 3) : 5 + (index % 4) * 1.1,
+          size: isMobile ? 5 + (index % 3) : 5.8 + (index % 4) * 1.25,
           phase: index * 1.73,
           speed: PARTICLE_CONFIG.driftSpeed + (index % 5) * 0.00012,
         };
@@ -105,9 +105,9 @@ function HemoglobinField() {
       gradient.addColorStop(1, 'rgba(91, 8, 16, 0)');
 
       context.save();
-      context.globalAlpha = 0.7 + influence * 0.3;
+      context.globalAlpha = 0.86 + influence * 0.14;
       context.shadowColor = PARTICLE_CONFIG.color;
-      context.shadowBlur = 9 + influence * 8;
+      context.shadowBlur = 14 + influence * 14;
       context.fillStyle = gradient;
       context.beginPath();
       context.arc(particle.x, particle.y, radius, 0, Math.PI * 2);
