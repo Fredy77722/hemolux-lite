@@ -56,18 +56,43 @@ const heroCards: HeroCarouselCard[] = [
   { title: 'A equipa', description: 'Engenharia angolana a construir soluções para o próximo cuidado.', link: 'equipa', icon: Users, image: images.team },
 ];
 
-const teamGallery = [
-  { src: images.team, alt: 'Equipa HemoLux Lite — Alberto Ncundi, Marcos Fernando Abel e Feliciano Manuel', label: 'A EQUIPA HEMOLUX' },
-  { src: '/assets/images/team/feliciano.png', alt: 'Feliciano Manuel, membro da equipa HemoLux Lite', label: 'FELICIANO MANUEL' },
+const teamProfiles = [
+  {
+    src: images.team,
+    alt: 'Equipa HemoLux Lite — Alberto Ncundi, Marcos Fernando Abel e Feliciano Manuel',
+    label: 'A EQUIPA HEMOLUX',
+    name: 'Engenharia angolana',
+    role: 'Três pessoas. Um sinal.',
+    bio: 'Uma equipa angolana a transformar electrónica, software e investigação em cuidados mais acessíveis.',
+  },
+  {
+    src: '/assets/images/team/alberto.jpg',
+    alt: 'Alberto Miguel Sandalawa Ncundi',
+    label: 'ALBERTO NCUNDI',
+    name: 'Alberto Miguel Sandalawa Ncundi',
+    role: 'Founder & Co-CEO · Hardware',
+    bio: 'Fundador e Co-CEO da Hemolux. Licenciado em Electrónica e Telecomunicações, trabalha no hardware e na resolução dos desafios técnicos do projecto. Tem formação adicional em redes, CCTV e manutenção informática.',
+  },
+  {
+    src: '/assets/images/team/marcos.jpg',
+    alt: 'Marcos Fernando Abel',
+    label: 'MARCOS ABEL',
+    name: 'Marcos Fernando Abel',
+    role: 'Founder & CEO · Produto',
+    bio: 'Fundador e CEO da Hemolux. Com formação técnica em telecomunicações e tecnologia, lidera a programação, electrónica, desenvolvimento do produto e crescimento do projecto.',
+  },
+  {
+    src: '/assets/images/team/feliciano.png',
+    alt: 'Feliciano Manuel',
+    label: 'FELICIANO MANUEL',
+    name: 'Feliciano Manuel',
+    role: 'Systems Integration & Application Lead',
+    bio: 'Lidera a integração de sistemas e aplicações, conectando programação, redes, infraestrutura e tecnologias digitais para criar soluções eficientes e escaláveis.',
+  },
 ];
 
-function TeamGallery() {
-  const [activeImage, setActiveImage] = useState(0);
-  const image = teamGallery[activeImage];
-
-  const showImage = (index: number) => {
-    setActiveImage((index + teamGallery.length) % teamGallery.length);
-  };
+function TeamGallery({ activeImage, onChange }: { activeImage: number; onChange: (index: number) => void }) {
+  const image = teamProfiles[activeImage];
 
   return (
     <div className="team-gallery">
@@ -75,15 +100,47 @@ function TeamGallery() {
         <img key={image.src} src={image.src} alt={image.alt} loading="lazy" />
         <div className="team-image-tag">{image.label}<br /><span>Luanda, Angola</span></div>
         <div className="team-gallery-controls">
-          <button onClick={() => showImage(activeImage - 1)} aria-label="Imagem anterior"><ArrowLeft size={15} /></button>
-          <span>{String(activeImage + 1).padStart(2, '0')} / {String(teamGallery.length).padStart(2, '0')}</span>
-          <button onClick={() => showImage(activeImage + 1)} aria-label="Imagem seguinte"><ArrowRight size={15} /></button>
+          <button onClick={() => onChange((activeImage - 1 + teamProfiles.length) % teamProfiles.length)} aria-label="Imagem anterior"><ArrowLeft size={15} /></button>
+          <span>{String(activeImage + 1).padStart(2, '0')} / {String(teamProfiles.length).padStart(2, '0')}</span>
+          <button onClick={() => onChange((activeImage + 1) % teamProfiles.length)} aria-label="Imagem seguinte"><ArrowRight size={15} /></button>
         </div>
       </div>
-      <div className="team-gallery-next" aria-hidden="true">
+      <button
+        className="team-gallery-next"
+        type="button"
+        onClick={() => onChange((activeImage + 1) % teamProfiles.length)}
+        aria-label="Mostrar próxima imagem e perfil"
+      >
         Próxima imagem <ArrowRight size={14} />
-      </div>
+      </button>
     </div>
+  );
+}
+
+function TeamSection() {
+  const [activeImage, setActiveImage] = useState(0);
+  const profile = teamProfiles[activeImage];
+
+  return (
+    <section className="team-section section-pad" id="equipa">
+      <div className="team-layout">
+        <TeamGallery activeImage={activeImage} onChange={setActiveImage} />
+        <div className="team-copy reveal delay-1">
+          <span className="section-kicker light">06 / QUEM FAZ</span>
+          <h2>{profile.name}<br /><em>{profile.role}</em></h2>
+          <p>{profile.bio}</p>
+          <div className="team-list">
+            {teamProfiles.slice(1).map((member) => (
+              <div key={member.name} className={member.name === profile.name ? 'active' : ''}>
+                <strong>{member.name.split(' ').slice(0, 2).join(' ')}</strong><span>{member.role.split(' · ')[0]}</span>
+              </div>
+            ))}
+          </div>
+          <div className="team-featured-member"><strong>{profile.label}</strong><span>Perfil {String(activeImage + 1).padStart(2, '0')} / {String(teamProfiles.length).padStart(2, '0')}</span></div>
+          <div className="angola-line"><span /> Construído em Angola, por mérito próprio <span /></div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -205,7 +262,7 @@ function App() {
 
         <section className="impact-section section-pad" id="impacto"><div className="section-heading reveal"><div><span className="section-kicker">05 / IMPACTO</span><h2>Mais perto de<br /><em>quem precisa.</em></h2></div><p>Uma ferramenta pensada para o contexto real: diferentes equipas, diferentes distâncias, o mesmo compromisso com o cuidado. Já construímos a tecnologia — agora é chegar a quem precisa.</p></div><div className="impact-grid">{useCases.map(({ icon: Icon, title, text }, index) => <article className="impact-card reveal" key={title}><span className="impact-index">0{index + 1}</span><Icon size={25} /><h3>{title}</h3><p>{text}</p><ArrowUpRightIcon /></article>)}</div></section>
 
-        <section className="team-section section-pad" id="equipa"><div className="team-layout"><TeamGallery /><div className="team-copy reveal delay-1"><span className="section-kicker light">06 / QUEM FAZ</span><h2>Engenharia angolana<br /><em>a construir soluções.</em></h2><p>Somos uma equipa angolana que concebeu, desenvolveu e validou o HemoLux Lite de forma autónoma. Da electrónica ao software, do protótipo ao prémio — tudo nasceu do nosso trabalho. Agora levamos o que já construímos para o mundo.</p><div className="team-list"><div><strong>Alberto Ncundi</strong><span>Equipa</span></div><div><strong>Marcos Fernando Abel</strong><span>Equipa</span></div><div><strong>Feliciano Manuel</strong><span>Equipa</span></div></div><div className="team-featured-member"><strong>Três pessoas. Um sinal.</strong><span>Equipa HemoLux Lite</span></div><div className="angola-line"><span /> Construído em Angola, por mérito próprio <span /></div></div></div></section>
+        <TeamSection />
 
         <section className="section-pad timeline-section" id="marcos"><div className="section-heading reveal"><div><span className="section-kicker">07 / MARCOS</span><h2>Já construímos muito.<br /><em>E estamos prontos para mais.</em></h2></div><p>De uma ideia executada em equipa a uma oportunidade de representar Angola no palco global. Tudo por mérito próprio.</p></div><div className="timeline reveal"><div className="timeline-progress" /><div className="timeline-item"><span>01</span><div><small>ORIGEM</small><strong>A ideia</strong><p>Nasce a visão de uma monitorização mais acessível.</p></div></div><div className="timeline-item"><span>02</span><div><small>EXECUÇÃO</small><strong>Protótipo funcional</strong><p>Sensores, ecrã LCD e impressão de resultados ganham forma.</p></div></div><div className="timeline-item highlighted"><span>03</span><div><small>FITITEL 2026</small><strong>Stand 15 + demonstração</strong><p>O HemoLux é apresentado publicamente na categoria Electrónica e Telecomunicações.</p></div></div><div className="timeline-item"><span>04</span><div><small>RECONHECIMENTO</small><strong>Prémio e qualificação nacional</strong><p>Uma prova concreta para continuar a avançar.</p></div></div><div className="timeline-item next"><span>05</span><div><small>PRÓXIMO PASSO</small><strong>Concurso global</strong><p>Levar uma solução angolana para o mundo.</p></div></div></div></section>
 
