@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
+import HemoglobinField from './components/HemoglobinField';
+import HeroCarousel, { type HeroCarouselCard } from './components/HeroCarousel';
 import {
   ArrowDownRight,
   ArrowRight,
+  ArrowLeft,
   Activity,
   BrainCircuit,
   ChevronRight,
@@ -45,6 +48,45 @@ const useCases = [
   { icon: WifiOff, title: 'Comunidades remotas', text: 'Funciona mesmo sem internet, aproximando cuidados essenciais de quem mais precisa.' },
 ];
 
+const heroCards: HeroCarouselCard[] = [
+  { title: 'O problema', description: 'Menos agulhas, menos espera e menos dependência de laboratório.', link: 'problema', icon: Microscope, image: images.award },
+  { title: 'Como funciona', description: 'Sensores ópticos transformam sinais fisiológicos em informação útil.', link: 'funciona', icon: BrainCircuit, image: images.detail },
+  { title: 'Leitura óptica activa', description: 'Protótipo pronto para medir hemoglobina, frequência cardíaca e SpO₂.', link: 'funciona', icon: HeartPulse, image: images.device },
+  { title: 'Impacto', description: 'Decisões clínicas mais rápidas, mesmo onde a distância pesa.', link: 'impacto', icon: Activity, image: '/assets/images/team/sebast.png' },
+  { title: 'A equipa', description: 'Engenharia angolana a construir soluções para o próximo cuidado.', link: 'equipa', icon: Users, image: images.team },
+];
+
+const teamGallery = [
+  { src: images.team, alt: 'Equipa HemoLux Lite — Alberto Ncundi, Marcos Fernando Abel e Feliciano Manuel', label: 'A EQUIPA HEMOLUX' },
+  { src: '/assets/images/team/feliciano.png', alt: 'Feliciano Manuel, membro da equipa HemoLux Lite', label: 'FELICIANO MANUEL' },
+];
+
+function TeamGallery() {
+  const [activeImage, setActiveImage] = useState(0);
+  const image = teamGallery[activeImage];
+
+  const showImage = (index: number) => {
+    setActiveImage((index + teamGallery.length) % teamGallery.length);
+  };
+
+  return (
+    <div className="team-gallery">
+      <div className="team-image reveal">
+        <img key={image.src} src={image.src} alt={image.alt} loading="lazy" />
+        <div className="team-image-tag">{image.label}<br /><span>Luanda, Angola</span></div>
+        <div className="team-gallery-controls">
+          <button onClick={() => showImage(activeImage - 1)} aria-label="Imagem anterior"><ArrowLeft size={15} /></button>
+          <span>{String(activeImage + 1).padStart(2, '0')} / {String(teamGallery.length).padStart(2, '0')}</span>
+          <button onClick={() => showImage(activeImage + 1)} aria-label="Imagem seguinte"><ArrowRight size={15} /></button>
+        </div>
+      </div>
+      <div className="team-gallery-next" aria-hidden="true">
+        Próxima imagem <ArrowRight size={14} />
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [activeStep, setActiveStep] = useState(2);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -71,6 +113,7 @@ function App() {
 
   return (
     <div className="site-shell">
+      <HemoglobinField />
       <div className="top-line" />
       <header className="site-header">
         <button className="brand" onClick={() => scrollTo('top')} aria-label="Voltar ao início">
@@ -107,11 +150,10 @@ function App() {
               <div className="hero-subline">Sem agulhas <span /> Sem laboratório <span /> Sem espera</div>
             </div>
             <div className="hero-visual reveal delay-2">
-              <div className="hero-orbit orbit-one" /><div className="hero-orbit orbit-two" />
-              <div className="hero-image-wrap"><img src={images.device} alt="Protótipo HemoLux Lite a iniciar os sensores" /></div>
-              <div className="floating-card floating-card-top"><span className="pulse-icon"><HeartPulse size={18} /></span><div><small>SINAL DETECTADO</small><strong>Leitura óptica activa</strong></div></div>
-              <div className="floating-card floating-card-bottom"><span className="live-dot" /><div><small>ESTADO DO SISTEMA</small><strong>Pronto para medir</strong></div><Activity size={18} className="signal-icon" /></div>
-              <div className="hero-caption">HemoLux — Sistema Inteligente Óptico Não Invasivo <span>•</span> Stand 15</div>
+              <HeroCarousel
+                cards={heroCards}
+                onNavigate={scrollTo}
+              />
             </div>
           </div>
           <div className="hero-bottom reveal"><span>Feito em Angola</span><span className="hero-line" /><span>Para o próximo cuidado</span><span className="scroll-note">SCROLL PARA EXPLORAR <ArrowDownRight size={14} /></span></div>
@@ -163,7 +205,7 @@ function App() {
 
         <section className="impact-section section-pad" id="impacto"><div className="section-heading reveal"><div><span className="section-kicker">05 / IMPACTO</span><h2>Mais perto de<br /><em>quem precisa.</em></h2></div><p>Uma ferramenta pensada para o contexto real: diferentes equipas, diferentes distâncias, o mesmo compromisso com o cuidado. Já construímos a tecnologia — agora é chegar a quem precisa.</p></div><div className="impact-grid">{useCases.map(({ icon: Icon, title, text }, index) => <article className="impact-card reveal" key={title}><span className="impact-index">0{index + 1}</span><Icon size={25} /><h3>{title}</h3><p>{text}</p><ArrowUpRightIcon /></article>)}</div></section>
 
-        <section className="team-section section-pad" id="equipa"><div className="team-layout"><div className="team-image reveal"><img src={images.team} alt="Equipa HemoLux Lite — Alberto Ncundi, Marcos Fernando Abel e Feliciano Manuel" loading="lazy" /><div className="team-image-tag">A EQUIPA HEMOLUX<br /><span>Luanda, Angola</span></div></div><div className="team-copy reveal delay-1"><span className="section-kicker light">06 / QUEM FAZ</span><h2>Engenharia angolana<br /><em>a construir soluções.</em></h2><p>Somos uma equipa angolana que concebeu, desenvolveu e validou o HemoLux Lite de forma autónoma. Da electrónica ao software, do protótipo ao prémio — tudo nasceu do nosso trabalho. Agora levamos o que já construímos para o mundo.</p><div className="team-list"><div><strong>Alberto Ncundi</strong><span>Equipa</span></div><div><strong>Marcos Fernando Abel</strong><span>Equipa</span></div><div><strong>Feliciano Manuel</strong><span>Equipa</span></div></div><div className="angola-line"><span /> Construído em Angola, por mérito próprio <span /></div></div></div></section>
+        <section className="team-section section-pad" id="equipa"><div className="team-layout"><TeamGallery /><div className="team-copy reveal delay-1"><span className="section-kicker light">06 / QUEM FAZ</span><h2>Engenharia angolana<br /><em>a construir soluções.</em></h2><p>Somos uma equipa angolana que concebeu, desenvolveu e validou o HemoLux Lite de forma autónoma. Da electrónica ao software, do protótipo ao prémio — tudo nasceu do nosso trabalho. Agora levamos o que já construímos para o mundo.</p><div className="team-list"><div><strong>Alberto Ncundi</strong><span>Equipa</span></div><div><strong>Marcos Fernando Abel</strong><span>Equipa</span></div><div><strong>Feliciano Manuel</strong><span>Equipa</span></div></div><div className="team-featured-member"><strong>Três pessoas. Um sinal.</strong><span>Equipa HemoLux Lite</span></div><div className="angola-line"><span /> Construído em Angola, por mérito próprio <span /></div></div></div></section>
 
         <section className="section-pad timeline-section" id="marcos"><div className="section-heading reveal"><div><span className="section-kicker">07 / MARCOS</span><h2>Já construímos muito.<br /><em>E estamos prontos para mais.</em></h2></div><p>De uma ideia executada em equipa a uma oportunidade de representar Angola no palco global. Tudo por mérito próprio.</p></div><div className="timeline reveal"><div className="timeline-progress" /><div className="timeline-item"><span>01</span><div><small>ORIGEM</small><strong>A ideia</strong><p>Nasce a visão de uma monitorização mais acessível.</p></div></div><div className="timeline-item"><span>02</span><div><small>EXECUÇÃO</small><strong>Protótipo funcional</strong><p>Sensores, ecrã LCD e impressão de resultados ganham forma.</p></div></div><div className="timeline-item highlighted"><span>03</span><div><small>FITITEL 2026</small><strong>Stand 15 + demonstração</strong><p>O HemoLux é apresentado publicamente na categoria Electrónica e Telecomunicações.</p></div></div><div className="timeline-item"><span>04</span><div><small>RECONHECIMENTO</small><strong>Prémio e qualificação nacional</strong><p>Uma prova concreta para continuar a avançar.</p></div></div><div className="timeline-item next"><span>05</span><div><small>PRÓXIMO PASSO</small><strong>Concurso global</strong><p>Levar uma solução angolana para o mundo.</p></div></div></div></section>
 
